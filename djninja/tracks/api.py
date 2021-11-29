@@ -42,14 +42,15 @@ def change_track(request, track_id: int, data: TrackSchema):
         return 404, {"message": "Track does not exist"}
     
 
-@api.delete("/tracks/{track_id}", response={200: TrackSchema, 404: NotFoundSchema})
-def delete_track(request, track_id: int, data: TrackSchema):
+@api.delete("/tracks/{track_id}", response={200: None, 404: NotFoundSchema})
+def delete_track(request, track_id: int):
+    # curl -X DELETE http://localhost:8000/api/tracks/7729
     try:
         track = Track.objects.get(pk=track_id)
         track.delete()
         return 200
     except Track.DoesNotExist as e:
-        return 404, {"message": "Track does not exist"}
+        return 404, {"message": "Could not find track"}
 
 
 @api.post("/upload", url_name='upload')
